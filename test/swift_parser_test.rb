@@ -40,4 +40,26 @@ class SwiftParserTest < Minitest::Test
     ]
     assert_equal exp_ast, @parser.new(swift_file).parse.map(&:inspect)
   end
+
+  def test_tag_with_attributes
+    swift_file = \
+      "{1:BELERUMMAX}{2:O103131}{4:\n" \
+      ":20:MOSTJSC5123403DB\n" \
+      ":23B:CRED\n" \
+      ":33B:CNY5355,\n" \
+      '-}'
+    exp_ast = [
+      { name: '1', content: ['BELERUMMAX'] },
+      { name: '2', content: ['O103131'] },
+      {
+        name: '4',
+        content: [
+          { name: '20', content: 'MOSTJSC5123403DB' },
+          { name: '23B', content: 'CRED' },
+          { name: '33B', content: 'CNY5355,' }
+        ]
+      }
+    ]
+    assert_equal exp_ast, @parser.new(swift_file).parse.map(&:inspect)
+  end
 end

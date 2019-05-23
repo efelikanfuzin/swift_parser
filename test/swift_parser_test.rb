@@ -47,16 +47,31 @@ class SwiftParserTest < Minitest::Test
       ":20:MOSTJSC5123403DB\n" \
       ":23B:CRED\n" \
       ":33B:CNY5355,\n" \
-      '-}'
+      '-}{5:{MAC:00000000}{CHK:442B6311EC3F}}{S:{SAC:}{COP:S}{LAU:95E078FB}}'
     exp_ast = [
       { name: '1', content: ['BELERUMMAX'] },
       { name: '2', content: ['O103131'] },
       {
         name: '4',
         content: [
-          { name: '20', content: 'MOSTJSC5123403DB' },
-          { name: '23B', content: 'CRED' },
-          { name: '33B', content: 'CNY5355,' }
+          { name: '20', content: ['MOSTJSC5123403DB'] },
+          { name: '23B', content: ['CRED'] },
+          { name: '33B', content: ['CNY5355,'] }
+        ]
+      },
+      {
+        name: '5',
+        content: [
+          { name: 'MAC', content: ['00000000']},
+          { name: 'CHK', content: ['442B6311EC3F']}
+        ]
+      },
+      {
+        name: 'S',
+        content: [
+          { name: 'SAC', content: [''] },
+          { name: 'COP', content: ['S'] },
+          { name: 'LAU', content: ['95E078FB'] }
         ]
       }
     ]

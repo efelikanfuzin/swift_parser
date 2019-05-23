@@ -22,7 +22,10 @@ module SwiftParser
       tag = Tag.new(@buffer.scan_until(/:/).chop)
 
       if tag.name == '4'
-        @buffer.scan_until(/:(?<name>\d\d\w?):(.*)\s/)
+        while @buffer.scan_until(/:(\d\d\w?):(.*)\s/)
+          tag.content << Tag.new(@buffer.captures[0], @buffer.captures[1])
+        end
+        @buffer.scan(/-}/)
       elsif @buffer.peep(1) == '{'
         tag.content << find_tag until @buffer.peep(1) == '}'
         @buffer.getch
@@ -37,9 +40,9 @@ module SwiftParser
       attr_reader :name
       attr_accessor :content
 
-      def initialize(name)
+      def initialize(name, content = nil)
         @name = name
-        @content = []
+        @content = [content].compact
       end
 
       def inspect

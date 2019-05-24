@@ -77,4 +77,48 @@ class SwiftParserTest < Minitest::Test
     ]
     assert_equal exp_ast, @parser.new(swift_file).parse.map(&:inspect)
   end
+
+  def test_multiline_attributes
+    swift_file = \
+      "{1:BELERUMMAX}{2:O103131}{4:\n" \
+      ":50K:/305160034498\n" \
+      "SYM HOIST AND TOWER CRANE EQUIPMENT\n" \
+      "CO., LTD. ADD.ROOM 843, 81 PANGJIA\n" \
+      "NG STREET DADONG DISTRICT, SHENYANG\n" \
+      ", CHINA, CHINA\n" \
+      ":59:/40702156710050000003\n" \
+      "OOO KRANTEHPRO 2801224221 ADD.UL B.\n" \
+      "HMELNICKOGO,DOM 42,OF 404, G BLAGOV\n" \
+      "ESHENSK, RUSSIA\n" \
+      '-}'
+    exp_ast = [
+      { name: '1', content: ['BELERUMMAX'] },
+      { name: '2', content: ['O103131'] },
+      {
+        name: '4',
+        content: [
+          {
+            name: '50K',
+            content: [
+              '/305160034498',
+              'SYM HOIST AND TOWER CRANE EQUIPMENT',
+              'CO., LTD. ADD.ROOM 843, 81 PANGJIA',
+              'NG STREET DADONG DISTRICT, SHENYANG',
+              ', CHINA, CHINA'
+            ]
+          },
+          {
+            name: '59',
+            content: [
+              '/40702156710050000003',
+              'OOO KRANTEHPRO 2801224221 ADD.UL B.',
+              'HMELNICKOGO,DOM 42,OF 404, G BLAGOV',
+              'ESHENSK, RUSSIA'
+            ]
+          }
+        ]
+      }
+    ]
+    assert_equal exp_ast, @parser.new(swift_file).parse.map(&:inspect)
+  end
 end

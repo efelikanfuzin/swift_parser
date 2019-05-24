@@ -26,8 +26,8 @@ module SwiftParser
           tag.content << Tag.new(@buffer.captures[0], @buffer.captures[1])
         end
         @buffer.scan(/-}/)
-      elsif @buffer.peep(1) == '{'
-        tag.content << find_tag until @buffer.peep(1) == '}'
+      elsif @buffer.peek(1) == '{'
+        tag.content << find_tag until @buffer.peek(1) == '}'
         @buffer.getch
       else
         tag.content << @buffer.scan_until(/}/).chop

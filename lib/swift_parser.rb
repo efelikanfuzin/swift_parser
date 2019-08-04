@@ -14,7 +14,6 @@ module SwiftParser
     def parse
       until @buffer.eos?
         tag = find_tag
-        binding.pry
         @tags.merge!(tag) if tag.is_a?(Hash)
       end
       @tags

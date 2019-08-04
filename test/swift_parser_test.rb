@@ -7,7 +7,6 @@ class SwiftParserTest < Minitest::Test
   end
 
   def test_simplest_example
-    skip
     swift_file = '{1:F01BELERUMMA}{2:O1031386941804251314N}'
     exp_ast = { '1' => 'F01BELERUMMA', '2' => 'O1031386941804251314N' }
 
@@ -15,14 +14,12 @@ class SwiftParserTest < Minitest::Test
   end
 
   def test_simplest_example_2
-    # skip
     swift_file = '{1:{2:F01}{3:O1031}}'
     exp_ast = { '1' => { '2' => 'F01', '3' => 'O1031' } }
     assert_equal exp_ast, @parser_class.new(swift_file).parse
   end
 
   def test_nested_tags
-    skip
     swift_file = '{1:{2:{4:32}{23A:TEST}}}'
     exp_ast = \
       {
@@ -37,7 +34,6 @@ class SwiftParserTest < Minitest::Test
   end
 
   def test_simple_part_of_swift_file
-    skip
     swift_file = \
       '{1:F01BELERUMMAXXX3987291980}'\
       '{2:O1031314180425TJSCRUMMAXXX62506386941804251314N}'
@@ -49,7 +45,6 @@ class SwiftParserTest < Minitest::Test
   end
 
   def test_nested_tags_in_swift_file
-    skip
     swift_file =
       '{5:{MAC:00000000}{CHK:442B6311EC3F}}'\
       '{S:{SAC:}{COP:S}{LAU:95E078FB}}'
@@ -61,7 +56,6 @@ class SwiftParserTest < Minitest::Test
   end
 
   def test_tag_with_attributes
-    skip
     swift_file = \
       "{1:BELERUMMAX}{2:O103131}{4:\n" \
       ":20:MOSTJSC5123403DB\n" \
@@ -99,7 +93,6 @@ class SwiftParserTest < Minitest::Test
   end
 
   def test_multiline_attributes
-    skip
     swift_file = \
       "{1:BELERUMMAX}{2:O103131}{4:\n" \
       ":50K:/305160034498\n" \

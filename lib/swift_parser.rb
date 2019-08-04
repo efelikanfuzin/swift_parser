@@ -6,51 +6,45 @@ module SwiftParser
     attr_reader :tags
 
     def initialize(str)
-      @buffer = StringScanner.new(str)
-      @tags = []
+      @buffer = StringScanner.new(str.delete("\n"))
+      @tags = {}
+      @last_tag_name = nil
     end
 
     def parse
-      tags.push(find_tag) until @buffer.eos?
-      tags
+      until @buffer.eos?
+        tag = find_tag
+        binding.pry
+        @tags.merge!(tag) if tag.is_a?(Hash)
+      end
+      @tags
     end
-
-    private
 
     def find_tag
-      @buffer.scan_until(/{/)
-      tag = Tag.new(@buffer.scan_until(/:/).chop)
+      if new_tag?
+        tag_name = find_tag_name
+        content = @buffer.check(/{/) ? find_tag : find_tag_content
 
-      if tag.name == '4'
-        while @buffer.scan_until(/:(\d\d\w?):(.*)\s/)
-          tag.content << Tag.new(@buffer.captures[0], @buffer.captures[1])
-        end
-        @buffer.scan(/-}/)
-      elsif @buffer.peek(1) == '{'
-        tag.content << find_tag until @buffer.peek(1) == '}'
-        @buffer.getch
+        { tag_name => content }
       else
-        tag.content << @buffer.scan_until(/}/).chop
+        find_close_tag
       end
-
-      tag
     end
 
-    class Tag
-      attr_reader :name
-      attr_accessor :content
+    def new_tag?
+      @buffer.scan(/{/)
+    end
 
-      def initialize(name, content = nil)
-        @name = name
-        @content = [content].compact
-      end
+    def find_tag_name
+      @buffer.scan_until(/:/).chop
+    end
 
-      def inspect
-        {
-          name: name,
-          content: content.map { |item| item.is_a?(String) ? item : item.inspect }
-        }
-      end
+    def find_tag_content
+      @buffer.scan_until(/}/).chop
+    end
+
+    def find_close_tag
+      @buffer.scan(/}/)
     end
   end
 end

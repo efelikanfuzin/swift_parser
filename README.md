@@ -33,3 +33,8 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/swift_parser.
+
+
+## SWIFT payments examples
+
+[online builder](https://www.paymentcomponents.com/demo/mt)

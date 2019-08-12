@@ -7,43 +7,39 @@ module SwiftParser
 
     def initialize(str)
       @buffer = StringScanner.new(str.delete("\n"))
-      @tags = {}
+      @blocks = {}
       @last_tag_name = nil
     end
-
+    
     def parse
-      until @buffer.eos?
-        tag = find_tag
-        @tags.merge!(tag) if tag.is_a?(Hash)
+      until @buffer.eos? || next_char_is?("}")
+        @blocks.merge!(find_block)
       end
-      @tags
+      
+      @blocks
+    end
+    
+    def find_block
+      { find_block_name => find_block_content }
     end
 
-    def find_tag
-      if new_tag?
-        tag_name = find_tag_name
-        content = @buffer.check(/{/) ? find_tag : find_tag_content
+    def find_block_name
+      @buffer.scan_until(/:/).tr('{:', '')
+    end
 
-        { tag_name => content }
-      else
-        find_close_tag
+    def find_block_content
+      return @buffer.scan_until(/}/).tr('}', '') unless next_char_is?('{')
+
+      content = {}
+      while next_char_is?('{')
+        content.merge!(find_block)
       end
+
+      content
     end
 
-    def new_tag?
-      @buffer.scan(/{/)
-    end
-
-    def find_tag_name
-      @buffer.scan_until(/:/).chop
-    end
-
-    def find_tag_content
-      @buffer.scan_until(/}/).chop
-    end
-
-    def find_close_tag
-      @buffer.scan(/}/)
+    def next_char_is?(char)
+      @buffer.check(/#{char}/) == char
     end
   end
 end

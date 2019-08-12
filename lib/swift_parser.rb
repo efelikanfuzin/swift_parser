@@ -12,13 +12,17 @@ module SwiftParser
     end
     
     def parse
-      until @buffer.eos? || next_char_is?("}")
+      until @buffer.eos?
         @blocks.merge!(find_block)
+
+        close_brackets!
       end
       
       @blocks
     end
-    
+
+    private
+
     def find_block
       { find_block_name => find_block_content }
     end
@@ -28,18 +32,26 @@ module SwiftParser
     end
 
     def find_block_content
-      return @buffer.scan_until(/}/).tr('}', '') unless next_char_is?('{')
+      return tag_content unless has_more_blocks?
 
       content = {}
-      while next_char_is?('{')
+      while has_more_blocks?
         content.merge!(find_block)
       end
 
       content
     end
 
-    def next_char_is?(char)
-      @buffer.check(/#{char}/) == char
+    def tag_content
+      @buffer.scan_until(/}/).tr('}', '')
+    end
+
+    def close_brackets!
+      @buffer.scan(/\}+/)
+    end
+
+    def has_more_blocks?
+      @buffer.check(/\{/) != nil
     end
   end
 end

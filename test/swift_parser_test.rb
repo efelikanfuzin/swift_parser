@@ -14,12 +14,14 @@ class SwiftParserTest < Minitest::Test
   end
 
   def test_nested_blocks
-    swift_file = '{5:{MAC:75D138E4}{CHK:DE1B0D71FA96}}'
+    swift_file = '{1:TEST}{5:{MAC:75D138E4}{CHK:{23B:DE1B0D71FA96}}{2:4323}'
     exp_ast = {
+      '1' => 'TEST',
       '5' => {
         'MAC' => '75D138E4',
-        'CHK' => 'DE1B0D71FA96'
-      }
+        'CHK' => { '23B' => 'DE1B0D71FA96' }
+      },
+      '2' => '4323'
     }
 
     assert_equal exp_ast, @parser_class.new(swift_file).parse

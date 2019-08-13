@@ -8,7 +8,7 @@ module SwiftParser
     attr_reader :tags
 
     def initialize(str)
-      @buffer = StringScanner.new(str.delete("\n"))
+      @buffer = StringScanner.new(str)
       @blocks = {}
     end
 
@@ -42,7 +42,9 @@ module SwiftParser
     end
 
     def tag_content
-      @buffer.scan_until(/}/).tr('}', '')
+      tag_content = @buffer.scan_until(/}/).sub('-}', '').sub('}', '')
+
+      content_have_attrs?(tag_content) ? parse_attrs(tag_content) : tag_content
     end
 
     def close_brackets!
@@ -51,6 +53,21 @@ module SwiftParser
 
     def more_blocks?
       @buffer.check(/\{/) != nil
+    end
+
+    def content_have_attrs?(content)
+      content.include?(':')
+    end
+
+    def parse_attrs(string)
+      string.split(':')
+            .reject { |item| blank_string?(item) }
+            .each_slice(2)
+            .each_with_object({}) { |(k, v), hsh| hsh[k] = v.strip.split("\n") }
+    end
+
+    def blank_string?(str)
+      ['', ' ', nil, "\n"].include?(str)
     end
   end
 end

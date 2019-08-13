@@ -1,2 +1,12 @@
 require:
   - rubocop-performance
+
+Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 100
+
+Metrics/MethodLength:
+  Exclude:
+    - 'test/**/*'

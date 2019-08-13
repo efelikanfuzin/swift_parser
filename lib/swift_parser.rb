@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'swift_parser/version'
 require 'strscan'
 
@@ -9,14 +11,14 @@ module SwiftParser
       @buffer = StringScanner.new(str.delete("\n"))
       @blocks = {}
     end
-    
+
     def parse
       until @buffer.eos?
         @blocks.merge!(find_block)
 
         close_brackets!
       end
-      
+
       @blocks
     end
 

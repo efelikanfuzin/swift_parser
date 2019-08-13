@@ -7,3 +7,4 @@ before_install:
   - bundle install
 script:
   - rake test
+  - rubocop

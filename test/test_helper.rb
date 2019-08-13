@@ -5,3 +5,9 @@ require "minitest/autorun"
 require 'minitest/reporters'
 
 Minitest::Reporters.use! [Minitest::Reporters::ProgressReporter.new(color: true)]
+
+class Minitest::Test
+  def read_file(name)
+    File.read("test/fixtures/files/#{name}")
+  end
+end

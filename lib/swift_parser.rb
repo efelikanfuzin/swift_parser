@@ -8,7 +8,6 @@ module SwiftParser
     def initialize(str)
       @buffer = StringScanner.new(str.delete("\n"))
       @blocks = {}
-      @last_tag_name = nil
     end
     
     def parse
@@ -32,12 +31,10 @@ module SwiftParser
     end
 
     def find_block_content
-      return tag_content unless has_more_blocks?
+      return tag_content unless more_blocks?
 
       content = {}
-      while has_more_blocks?
-        content.merge!(find_block)
-      end
+      content.merge!(find_block) while more_blocks?
 
       content
     end
@@ -50,7 +47,7 @@ module SwiftParser
       @buffer.scan(/\}+/)
     end
 
-    def has_more_blocks?
+    def more_blocks?
       @buffer.check(/\{/) != nil
     end
   end

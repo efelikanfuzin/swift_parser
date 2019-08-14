@@ -4,6 +4,8 @@ require 'swift_parser/version'
 require 'strscan'
 
 module SwiftParser
+  class InvalidSwift < StandardError; end
+
   class Base
     attr_reader :tags
 
@@ -20,6 +22,8 @@ module SwiftParser
       end
 
       @blocks
+    rescue StandardError
+      raise InvalidSwift
     end
 
     private

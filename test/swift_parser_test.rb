@@ -68,7 +68,7 @@ class SwiftParserTest < Minitest::Test
   end
 
   def test_parse_empty_string
-    assert_equal({} , @parser_class.new('').parse)
+    assert_equal({}, @parser_class.new('').parse)
   end
 
   def test_raise_errors_with_wrong_type
@@ -77,8 +77,11 @@ class SwiftParserTest < Minitest::Test
     assert_raises(TypeError) { @parser_class.new([1321]).parse }
   end
 
-  def test_raise_errors_when_invalid_swift_structure
-    binding.pry
-    assert_raises(SwiftParser::InvalidSwift) { @parser_class.new('{1:no_close_brackets}}').parse }
+  def test_raise_errors_when_parse!
+    assert_raises(SwiftParser::InvalidSwift) { @parser_class.new('{1:no_close_brackets}}}').parse! }
+  end
+
+  def test_empty_hash_when_invalid_error
+    assert_equal({}, @parser_class.new('{1:no_close_brackets}}}').parse)
   end
 end

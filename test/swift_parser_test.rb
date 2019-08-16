@@ -66,4 +66,22 @@ class SwiftParserTest < Minitest::Test
 
     assert_equal exp_ast, @parser_class.new(swift_file).parse['4']
   end
+
+  def test_parse_empty_string
+    assert_equal({}, @parser_class.new('').parse)
+  end
+
+  def test_raise_errors_with_wrong_type
+    assert_raises(TypeError) { @parser_class.new(1321).parse }
+    assert_raises(TypeError) { @parser_class.new({}).parse }
+    assert_raises(TypeError) { @parser_class.new([1321]).parse }
+  end
+
+  def test_raise_errors_when_parse!
+    assert_raises(SwiftParser::InvalidSwift) { @parser_class.new('{1:no_close_brackets}}}').parse! }
+  end
+
+  def test_empty_hash_when_invalid_error
+    assert_equal({}, @parser_class.new('{1:no_close_brackets}}}').parse)
+  end
 end

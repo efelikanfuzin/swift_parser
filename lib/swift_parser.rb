@@ -4,22 +4,32 @@ require 'swift_parser/version'
 require 'strscan'
 
 module SwiftParser
+  class InvalidSwift < StandardError; end
+
   class Base
-    attr_reader :tags
+    attr_reader :blocks, :buffer
 
     def initialize(str)
       @buffer = StringScanner.new(str)
       @blocks = {}
     end
 
-    def parse
-      until @buffer.eos?
-        @blocks.merge!(find_block)
+    def parse!
+      until buffer.eos?
+        blocks.merge!(find_block)
 
         close_brackets!
       end
 
-      @blocks
+      blocks
+    rescue StandardError
+      raise InvalidSwift
+    end
+
+    def parse
+      parse!
+    rescue InvalidSwift
+      {}
     end
 
     private
@@ -29,7 +39,7 @@ module SwiftParser
     end
 
     def find_block_name
-      @buffer.scan_until(/:/).tr('{:', '')
+      buffer.scan_until(/:/).tr('{}:', '')
     end
 
     def find_block_content
@@ -42,17 +52,17 @@ module SwiftParser
     end
 
     def tag_content
-      tag_content = @buffer.scan_until(/}/).sub('-}', '').sub('}', '')
+      tag_content = buffer.scan_until(/\}/).sub('-}', '').sub('}', '')
 
       content_have_attrs?(tag_content) ? parse_attrs(tag_content) : tag_content
     end
 
     def close_brackets!
-      @buffer.scan(/\}+/)
+      buffer.scan(/\}/)
     end
 
     def more_blocks?
-      @buffer.check(/\{/) != nil
+      buffer.check(/\{/) != nil
     end
 
     def content_have_attrs?(content)

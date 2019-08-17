@@ -17,7 +17,7 @@ module SwiftParser
             'SYM HOIST AND TOWER CRANE EQUIPMENT',
             'CO., LTD. ADD.ROOM 843, 81 PANGJIA',
             'NG STREET DADONG DISTRICT, SHENYANG',
-            ', CHINA, CHINA'
+            'CHINA, CHINA'
           ],
           '52A' => ['BKCHCNBJ82A'],
           '53B' => ['/C/30109156800000000174'],
@@ -43,16 +43,16 @@ module SwiftParser
       @mt103 = SwiftParser::Mt103.new(swift_hash)
     end
 
+    def test_message_type
+      assert_equal '103', @mt103.message_type
+    end
+
     def test_sender_reference
       assert_equal 'MOSTJSC5123403DB', @mt103.sender_reference
     end
 
     def test_bank_operation_code
       assert_equal 'CRED', @mt103.bank_operation_code
-    end
-
-    def test_message_type
-      assert_equal '103', @mt103.message_type
     end
 
     def test_date_currency_amount

@@ -12,11 +12,14 @@ module SwiftParser
       { name: :ordering_customer,              path: '50K' },
       { name: :ordering_institution,           path: '52A' },
       { name: :sender_correspondent,           path: '53B' },
+      { name: :receiver_correspondent,         path: '54A' },
+      { name: :intermediary_institution,       path: '56A' },
       { name: :beneficiary_bank,               path: '57A' },
       { name: :beneficiary,                    path: '59'  },
       { name: :remittance_information,         path: '70'  },
       { name: :details_of_charges,             path: '71A' },
-      { name: :sender_to_receiver_information, path: '72'  }
+      { name: :sender_to_receiver_information, path: '72'  },
+      { name: :regulatory_reporting,           path: '77B' }
     ].freeze
 
     def initialize(swift_hash)

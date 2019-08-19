@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'pry'
 
 class SwiftParserTest < Minitest::Test
   def setup
@@ -12,7 +11,7 @@ class SwiftParserTest < Minitest::Test
     swift_file = '{1:F01BELERUMMA}{2:O1031386941804251314N}'
     exp_ast = { '1' => 'F01BELERUMMA', '2' => 'O1031386941804251314N' }
 
-    assert_equal exp_ast, @parser_class.new(swift_file).parse
+    assert_equal exp_ast, @parser_class.new(swift_file).parse.to_h
   end
 
   def test_nested_blocks
@@ -26,7 +25,7 @@ class SwiftParserTest < Minitest::Test
       '2' => '4323'
     }
 
-    assert_equal exp_ast, @parser_class.new(swift_file).parse
+    assert_equal exp_ast, @parser_class.new(swift_file).parse.to_h
   end
 
   def test_fourth_block
@@ -64,11 +63,11 @@ class SwiftParserTest < Minitest::Test
       ]
     }
 
-    assert_equal exp_ast, @parser_class.new(swift_file).parse['4']
+    assert_equal exp_ast, @parser_class.new(swift_file).parse.to_h['4']
   end
 
   def test_parse_empty_string
-    assert_equal({}, @parser_class.new('').parse)
+    assert_equal({}, @parser_class.new('').parse.to_h)
   end
 
   def test_raise_errors_with_wrong_type
@@ -82,6 +81,6 @@ class SwiftParserTest < Minitest::Test
   end
 
   def test_empty_hash_when_invalid_error
-    assert_equal({}, @parser_class.new('{1:no_close_brackets}}}').parse)
+    assert_equal({}, @parser_class.new('{1:no_close_brackets}}}').parse.to_h)
   end
 end

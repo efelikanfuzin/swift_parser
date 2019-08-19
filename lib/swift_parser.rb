@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'swift_parser/version'
+require 'swift_parser/mt103'
 require 'strscan'
 
 module SwiftParser
@@ -21,7 +22,7 @@ module SwiftParser
         close_brackets!
       end
 
-      blocks
+      SwiftParser::Mt103.new(blocks)
     rescue StandardError
       raise InvalidSwift
     end

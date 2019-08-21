@@ -1,0 +1,17 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    ruby_version: '2.6.3'
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: run test
+      run: |
+        gem install bundler
+        bundler install
+        bundle exec rake test
